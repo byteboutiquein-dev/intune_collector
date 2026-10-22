@@ -74,10 +74,10 @@ valid and timestamped. `ReleaseReady=True` is emitted only after the package
 passes its own signed-manifest validation. The private key must remain in the
 approved signing provider's HSM and must never be added to this repository.
 
-## Public source export
+## Repository boundary and source export
 
-When this directory is maintained inside a private product monorepo, generate
-the public-repository candidate with:
+Validate that the checkout contains only the public collector boundary and
+generate a reviewable source archive with:
 
 ```powershell
 .\scripts\Export-OpenSourceRepository.ps1
@@ -86,7 +86,7 @@ the public-repository candidate with:
 The export uses an explicit allowlist, rejects parent-repository references and
 common secret or certificate material, scans the staged copy again, and writes
 a source ZIP plus SHA-256 file under `.artifacts\open-source`. Inspect the
-archive before creating or updating the public repository.
+archive before publishing a release.
 
 ## Enrollment
 
