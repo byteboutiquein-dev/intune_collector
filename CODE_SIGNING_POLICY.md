@@ -44,12 +44,9 @@ the private-key operation.
 
 ## Project roles
 
-- Committer and reviewer: Mohanraj M, repository owner.
-- Signing approver: Mohanraj M, repository owner.
-
-Public profile and repository links must replace these role descriptions on
-the published project page before the SignPath Foundation application is
-submitted.
+- Repository: [byteboutiquein-dev/intune_collector](https://github.com/byteboutiquein-dev/intune_collector).
+- Committer and reviewer: [Mohanraj M](https://github.com/byteboutiquein-dev), repository owner.
+- Signing approver: [Mohanraj M](https://github.com/byteboutiquein-dev), repository owner.
 
 ## Verification
 
@@ -64,4 +61,3 @@ Get-FileHash .\IntuneReliability.Collector.exe -Algorithm SHA256
 
 Use only publisher identities and ZIP hashes copied from the canonical release
 page. Do not trust a publisher value supplied alongside an unverified archive.
-
