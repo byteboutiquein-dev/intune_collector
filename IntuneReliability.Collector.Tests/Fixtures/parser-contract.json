@@ -1,0 +1,132 @@
+[
+  {
+    "name": "IME lifecycle",
+    "sourceType": "intune_management_extension_log",
+    "lines": [
+      "<![LOG[Intune Management Extension started]LOG]!><time=\"12:00:00.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Check-in completed]LOG]!><time=\"12:00:01.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Application policy received]LOG]!><time=\"12:00:02.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "IME_STARTED", "lifecycleStage": "UNKNOWN" },
+      { "eventType": "IME_CHECKIN", "lifecycleStage": "UNKNOWN" },
+      { "eventType": "POLICY_RECEIVED", "lifecycleStage": "TARGETING" }
+    ]
+  },
+  {
+    "name": "Targeting and retry",
+    "sourceType": "app_action_processor_log",
+    "lines": [
+      "<![LOG[App with id: 11111111-2222-4333-8444-555555555555 targeted to device]LOG]!><time=\"12:01:00.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Retry scheduled for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:01:01.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[Skipping enforcement action for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:01:02.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[App with id: 11111111-2222-4333-8444-555555555555 not targeted to device]LOG]!><time=\"12:01:03.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "APP_TARGETED", "lifecycleStage": "TARGETING" },
+      { "eventType": "RETRY_SCHEDULED", "lifecycleStage": "RETRY_WAIT" },
+      { "eventType": "APP_ACTION_SKIPPED", "lifecycleStage": "DEFERRED" },
+      { "eventType": "APP_NOT_TARGETED", "lifecycleStage": "TARGETING" }
+    ]
+  },
+  {
+    "name": "Win32 failed execution sequence",
+    "sourceType": "app_workload_log",
+    "lines": [
+      "<![LOG[[Win32App][GRSManager] App with id: 11111111-2222-4333-8444-555555555555 is not expired]LOG]!><time=\"12:02:00.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ApplicabilityActionHandler] Applicability check for policy with id: 11111111-2222-4333-8444-555555555555 and applicability state: Applicable]LOG]!><time=\"12:02:01.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Requirement check passed for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:02.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Dependency evaluation passed for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:03.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][DetectionActionHandler] Detection for policy with id: 11111111-2222-4333-8444-555555555555 resulted in action status: Success and detection state: NotDetected.]LOG]!><time=\"12:02:04.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][DownloadActionHandler] Handler invoked for policy with id: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:05.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ReportingManager] Download state for app with id: 11111111-2222-4333-8444-555555555555 changed {\"newValue\":\"InProgressDownloadCompleted\"}]LOG]!><time=\"12:02:06.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ExecutionActionHandler] Handler invoked with execution type: Install for policy with id: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:07.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ReportingManager] Execution state for app with id: 11111111-2222-4333-8444-555555555555 changed {\"newValue\":\"Error\"}]LOG]!><time=\"12:02:08.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][DetectionActionHandler] Detection for policy with id: 11111111-2222-4333-8444-555555555555 resulted in action status: Success and detection state: NotDetected.]LOG]!><time=\"12:02:09.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][StatusServiceReportsStore] Saved AppInstallStatusReport for app 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:10.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Application reevaluation interval is not expired for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:02:11.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "ENFORCEMENT_DEFERRED_GRS", "lifecycleStage": "DEFERRED" },
+      { "eventType": "APPLICABILITY_PASSED", "lifecycleStage": "APPLICABILITY" },
+      { "eventType": "REQUIREMENT_PASSED", "lifecycleStage": "REQUIREMENT" },
+      { "eventType": "DEPENDENCY_PASSED", "lifecycleStage": "DEPENDENCY" },
+      { "eventType": "DETECTION_PRE_ABSENT", "lifecycleStage": "PRE_INSTALL_DETECTION" },
+      { "eventType": "CONTENT_DOWNLOAD_STARTED", "lifecycleStage": "CONTENT" },
+      { "eventType": "CONTENT_DOWNLOAD_COMPLETED", "lifecycleStage": "CONTENT" },
+      { "eventType": "INSTALLER_STARTED", "lifecycleStage": "INSTALLER" },
+      { "eventType": "INSTALLER_FAILED", "lifecycleStage": "INSTALLER" },
+      { "eventType": "DETECTION_POST_FAILED", "lifecycleStage": "POST_INSTALL_DETECTION" },
+      { "eventType": "REPORTING_SUCCEEDED", "lifecycleStage": "REPORTING" },
+      { "eventType": "REEVALUATION_NOT_DUE", "lifecycleStage": "RETRY_WAIT" }
+    ]
+  },
+  {
+    "name": "Agent executor",
+    "sourceType": "agent_executor_log",
+    "lines": [
+      "<![LOG[Installer started for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:00.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[Process exited with exit code: 1603 for app 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:01.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "INSTALLER_STARTED", "lifecycleStage": "INSTALLER" },
+      { "eventType": "INSTALLER_EXITED", "lifecycleStage": "INSTALLER" }
+    ]
+  },
+  {
+    "name": "Win32 blockers and failed delivery",
+    "sourceType": "app_workload_log",
+    "lines": [
+      "<![LOG[[Win32App][ApplicabilityActionHandler] Applicability check for policy with id: 11111111-2222-4333-8444-555555555555 and applicability state: NotApplicable]LOG]!><time=\"12:03:10.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[Requirement check failed for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:11.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[Dependency evaluation failed for app: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:12.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ReportingManager] Download state for app with id: 11111111-2222-4333-8444-555555555555 changed {\"newValue\":\"Failed\"}]LOG]!><time=\"12:03:13.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ReportingManager] Failed to send status report for app 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:14.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "APPLICABILITY_FAILED", "lifecycleStage": "APPLICABILITY" },
+      { "eventType": "REQUIREMENT_FAILED", "lifecycleStage": "REQUIREMENT" },
+      { "eventType": "DEPENDENCY_FAILED", "lifecycleStage": "DEPENDENCY" },
+      { "eventType": "CONTENT_DOWNLOAD_FAILED", "lifecycleStage": "CONTENT" },
+      { "eventType": "REPORTING_FAILED", "lifecycleStage": "REPORTING" }
+    ]
+  },
+  {
+    "name": "Win32 detected and successful execution",
+    "sourceType": "app_workload_log",
+    "lines": [
+      "<![LOG[[Win32App][DetectionActionHandler] Detection for policy with id: 11111111-2222-4333-8444-555555555555 resulted in action status: Success and detection state: Detected.]LOG]!><time=\"12:03:20.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ExecutionActionHandler] Handler invoked with execution type: Install for policy with id: 11111111-2222-4333-8444-555555555555]LOG]!><time=\"12:03:21.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][ReportingManager] Execution state for app with id: 11111111-2222-4333-8444-555555555555 changed {\"newValue\":\"Success\"}]LOG]!><time=\"12:03:22.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">",
+      "<![LOG[[Win32App][DetectionActionHandler] Detection for policy with id: 11111111-2222-4333-8444-555555555555 resulted in action status: Success and detection state: Detected.]LOG]!><time=\"12:03:23.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"1\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "DETECTION_PRE_PRESENT", "lifecycleStage": "PRE_INSTALL_DETECTION" },
+      { "eventType": "INSTALLER_STARTED", "lifecycleStage": "INSTALLER" },
+      { "eventType": "INSTALLER_SUCCEEDED", "lifecycleStage": "INSTALLER" },
+      { "eventType": "DETECTION_POST_PASSED", "lifecycleStage": "POST_INSTALL_DETECTION" }
+    ]
+  },
+  {
+    "name": "Captured structured dependency blocker",
+    "sourceType": "app_workload_log",
+    "lines": [
+      "<![LOG[[Win32App][ReportingManager] Sending status to company portal based on report: {\"ApplicationId\":\"11111111-2222-4333-8444-555555555555\",\"ResultantAppState\":3,\"ReportingImpact\":{\"DesiredState\":3,\"Classification\":1,\"ConflictReason\":2,\"ImpactingApps\":[{\"AppId\":\"66666666-7777-4888-8999-aaaaaaaaaaaa\",\"RelationshipType\":3,\"RelativeType\":1,\"DesiredState\":3}]},\"EnforcementState\":6005}]LOG]!><time=\"11:24:40.7303624\" date=\"10-18-2026\" component=\"AppWorkload\" context=\"\" type=\"2\" thread=\"4\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "DEPENDENCY_FAILED", "lifecycleStage": "DEPENDENCY" }
+    ]
+  },
+  {
+    "name": "Client health",
+    "sourceType": "client_health_log",
+    "lines": [
+      "<![LOG[Client health warning: service degraded for operation 8f9666f6-cb01-4ed4-b1c9-f0635b99268e]LOG]!><time=\"12:04:00.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"2\" thread=\"1\" file=\"\">",
+      "<![LOG[Client health remediation failed for operation 0d650fd8-8272-48a8-a7bf-b2380e0e3256]LOG]!><time=\"12:04:01.0000000\" date=\"10-17-2026\" component=\"Fixture\" context=\"\" type=\"3\" thread=\"1\" file=\"\">"
+    ],
+    "expected": [
+      { "eventType": "CLIENT_HEALTH_WARNING", "lifecycleStage": "CLIENT_HEALTH" },
+      { "eventType": "CLIENT_HEALTH_FAILURE", "lifecycleStage": "CLIENT_HEALTH" }
+    ]
+  }
+]

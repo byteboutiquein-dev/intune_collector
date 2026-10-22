@@ -1,0 +1,11 @@
+.artifacts/
+**/artifacts/
+.vs/
+.vscode/
+**/bin/
+**/obj/
+*.pfx
+*.p12
+*.snk
+*.user
+TestResults/

@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Authors>SentVora contributors</Authors>
+    <Company>SentVora</Company>
+    <Copyright>Copyright (c) 2026 SentVora contributors</Copyright>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>
+

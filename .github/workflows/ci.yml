@@ -1,0 +1,57 @@
+name: Collector CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    name: Windows build and boundary validation
+    runs-on: windows-2022
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate collector lifecycle contracts
+        run: node --test .\tests\collector-lifecycle.test.mjs
+
+      - name: Validate public-source boundary
+        shell: pwsh
+        run: .\scripts\Test-OpenSourceBoundary.ps1
+
+      - name: Restore
+        run: dotnet restore .\IntuneReliability.Collector.Tests\IntuneReliability.Collector.Tests.csproj
+
+      - name: Test
+        run: dotnet test .\IntuneReliability.Collector.Tests\IntuneReliability.Collector.Tests.csproj --configuration Release --no-restore
+
+      - name: Build unsigned verification package
+        shell: pwsh
+        run: .\scripts\Build-Collector.ps1
+
+      - name: Upload unsigned CI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-lab-collector-${{ github.sha }}
+          path: |
+            .artifacts/collector/SentVora-Collector-*-win-x64.zip
+            .artifacts/collector/SentVora-Collector-*-win-x64.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
