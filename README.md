@@ -1,6 +1,6 @@
 # SentVora Windows Evidence Collector
 
-Collector `2.10.0` is the open-source, optional endpoint component for
+Collector `2.10.1` is the open-source, optional endpoint component for
 SentVora. It distinguishes GRS deferral from reevaluation delay and uses
 observed per-application ordering to separate pre-install detection from
 post-install verification. ClientHealth events remain device-scoped even when
@@ -31,7 +31,7 @@ Review these documents before deploying or contributing:
 
 - The source boundary, Apache-2.0 licensing, privacy contract, automated build,
   release policy, and export controls are implemented.
-- Collector `2.10.0` native normalizer tests must pass on the Windows build host before packaging.
+- Collector `2.10.1` native normalizer tests must pass on the Windows build host before packaging.
 - Lab packaging is self-contained; the target VM does not need a separate .NET runtime.
 - Unsigned lab artifacts require an explicit `-AllowUnsignedLabBuild` override and are never commercial release artifacts.
 - SignPath Foundation acceptance and the first publicly signed release remain
@@ -53,8 +53,8 @@ Set-ExecutionPolicy -Scope Process Bypass
 Output:
 
 ```text
-.artifacts\collector\SentVora-Collector-2.10.0-win-x64.zip
-.artifacts\collector\SentVora-Collector-2.10.0-win-x64.zip.sha256
+.artifacts\collector\SentVora-Collector-2.10.1-win-x64.zip
+.artifacts\collector\SentVora-Collector-2.10.1-win-x64.zip.sha256
 ```
 
 The build script runs native tests before publishing. It then creates a self-contained single-file executable, copies the service scripts, writes SHA-256 checksums, and creates a versioned ZIP. A signed build also emits and timestamps a signed release manifest covering every packaged file.
