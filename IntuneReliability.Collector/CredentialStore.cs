@@ -5,12 +5,9 @@ using System.Text;
 
 namespace IntuneReliability.Collector;
 
-public sealed class CredentialStore
+public sealed class CredentialStore(StateDirectory state)
 {
-    private static readonly string DirectoryPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "IntuneReliability", "Collector");
-    private static readonly string CredentialPath = Path.Combine(DirectoryPath, "credential.bin");
+    private static readonly string CredentialPath = Path.Combine(StateDirectory.Path, "credential.bin");
 
     public string? Load()
     {
@@ -22,7 +19,7 @@ public sealed class CredentialStore
 
     public void Save(string credential)
     {
-        Directory.CreateDirectory(DirectoryPath);
+        state.EnsureExists();
         var protectedBytes = ProtectedData.Protect(Encoding.UTF8.GetBytes(credential), null, DataProtectionScope.LocalMachine);
         File.WriteAllBytes(CredentialPath, protectedBytes);
     }

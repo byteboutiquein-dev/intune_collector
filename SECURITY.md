@@ -26,7 +26,8 @@ not a service-level agreement.
 - Raw log lines are not uploaded.
 - Upload is outbound HTTPS only; there is no remote command channel.
 - Device credentials are protected by Windows machine-scoped DPAPI.
-- Cursors advance only after the server accepts an idempotent batch.
+- Cursors advance past evidence only after the server accepts an idempotent batch.
+- The service restricts its state directory to SYSTEM and Administrators on every start.
 - Production installation and update fail closed unless package signatures,
   publisher identity, timestamps, and manifest hashes validate.
 

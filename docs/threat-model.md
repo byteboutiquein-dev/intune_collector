@@ -13,7 +13,7 @@
 | Threat | Control |
 | --- | --- |
 | Tampered release | Authenticode validation, timestamp validation, signed manifest, SHA-256 file binding, and publisher pinning |
-| Credential theft | Machine-scoped DPAPI, restricted state-directory ACL, one-time token deletion, and independent server revocation |
+| Credential theft | Machine-scoped DPAPI, restricted state-directory ACL (set by the installer and re-applied by the service on every start), one-time token deletion, and independent server revocation |
 | Raw-log disclosure | Allow-list normalizer emits fixed summaries and bounded attributes; raw lines are never serialized into events |
 | Replay or duplicate ingestion | Stable event fingerprints and batch idempotency keys |
 | Evidence loss after failed upload | Cursors commit only after accepted delivery |

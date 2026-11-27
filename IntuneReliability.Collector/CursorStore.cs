@@ -4,11 +4,9 @@ using System.Text.Json;
 
 namespace IntuneReliability.Collector;
 
-public sealed class CursorStore
+public sealed class CursorStore(StateDirectory state)
 {
-    private static readonly string CursorPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "IntuneReliability", "Collector", "cursors.json");
+    private static readonly string CursorPath = Path.Combine(StateDirectory.Path, "cursors.json");
 
     public IReadOnlyDictionary<string, FileCursor> Load()
     {
@@ -19,7 +17,7 @@ public sealed class CursorStore
 
     public void Save(IReadOnlyDictionary<string, FileCursor> cursors)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(CursorPath)!);
+        state.EnsureExists();
         var temporary = CursorPath + ".tmp";
         File.WriteAllText(temporary, JsonSerializer.Serialize(cursors));
         File.Move(temporary, CursorPath, true);

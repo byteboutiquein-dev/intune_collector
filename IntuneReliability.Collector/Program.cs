@@ -12,8 +12,10 @@ builder.Services.AddOptions<CollectorOptions>()
     .Validate(options => options.MaximumEventsPerBatch is >= 1 and <= 500, "Collector MaximumEventsPerBatch must be between 1 and 500.")
     .ValidateOnStart();
 builder.Services.AddHttpClient<CollectorApiClient>();
+builder.Services.AddSingleton<StateDirectory>();
 builder.Services.AddSingleton<CredentialStore>();
 builder.Services.AddSingleton<CursorStore>();
 builder.Services.AddSingleton<ImeEventNormalizer>();
+builder.Services.AddSingleton(services => new LogCollector(services.GetRequiredService<ImeEventNormalizer>().Normalize, FileIdentities.Read));
 builder.Services.AddHostedService<CollectorWorker>();
 await builder.Build().RunAsync();
