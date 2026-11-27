@@ -150,7 +150,7 @@ public sealed class CollectorWorker(
             if (!CursorsEqual(previous, next)) cursorStore.Save(next);
             return;
         }
-        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "2.10.0";
+        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "2.10.1";
         var idempotencyKey = $"collector:{Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(string.Join('|', events.Select(item => item.EventFingerprint))))).ToLowerInvariant()}";
         await api.UploadAsync(credential, new CollectorBatch(idempotencyKey, version, events, next), cancellationToken);
         cursorStore.Save(next);
