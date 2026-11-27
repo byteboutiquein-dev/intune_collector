@@ -8,7 +8,7 @@ Microsoft health records contain operation or remediation GUIDs.
 
 The collector is a read-only `.NET 8` Windows service. It reads allow-listed Microsoft Intune Management Extension logs, normalizes a bounded set of lifecycle events locally, and sends only structured evidence over outbound HTTPS.
 
-It has no command channel. It cannot modify Intune, clear GRS, retry applications, execute PowerShell, reboot, install applications, uninstall applications, or provide a remote shell. Cursors advance only after an idempotent batch is accepted. Device credentials are protected with Windows DPAPI and can be revoked independently.
+It has no command channel. It cannot modify Intune, clear GRS, retry applications, execute PowerShell, reboot, install applications, uninstall applications, or provide a remote shell. Cursors advance past evidence only after an idempotent batch is accepted. Device credentials are protected with Windows DPAPI and can be revoked independently.
 
 ## Open-source boundary
 
@@ -91,7 +91,7 @@ archive before publishing a release.
 ## Enrollment
 
 1. Sign in to SentVora as the workspace owner or administrator.
-2. Open **Administration > Collectors**.
+2. Open **Settings > Collectors**.
 3. Select the managed Windows device.
 4. Select **Create enrollment**.
 5. Copy the one-time token. It expires after 15 minutes and is shown only in that browser state.
@@ -178,7 +178,7 @@ publisher.
 
 An installed collector whose server credential was revoked must receive a new
 one-time enrollment. Do not uninstall it merely to replace the credential.
-Create a fresh enrollment for the same device in **Administration > Collectors**, open
+Create a fresh enrollment for the same device in **Settings > Collectors**, open
 PowerShell as Administrator in the extracted collector package, and run:
 
 ```powershell
@@ -201,13 +201,13 @@ Start-Sleep -Seconds 45
 .\Get-CollectorStatus.ps1
 ```
 
-Then refresh **Administration > Collectors**. The endpoint should show an active enrollment, a recent last-seen time, an accepted batch, and a reconstruction result. A batch appears only when an allow-listed lifecycle line is observed; ordinary unrelated log lines are intentionally ignored.
+Then refresh **Settings > Collectors**. The endpoint should show an active enrollment, a recent last-seen time, an accepted batch, and a reconstruction result. A batch appears only when an allow-listed lifecycle line is observed; ordinary unrelated log lines are intentionally ignored.
 
 ## Revocation and uninstall
 
 Perform revocation last because it intentionally stops uploads:
 
-1. In **Administration > Collectors**, select **Revoke** for the endpoint.
+1. In **Settings > Collectors**, select **Revoke** for the endpoint.
 2. Generate another normal IME event and wait at least 30 seconds.
 3. Verify the server does not accept a new batch and the collector does not advance its cursor.
 
